@@ -78,6 +78,7 @@ in {
     overrides ? defaultPnpmOverrides,
     allowImpure ? false,
     linkDevDependencies ? false,
+    srcOverrides ? {},
     ...
   } @args:
   let
@@ -166,7 +167,8 @@ in {
         }) else if (lib.hasAttr "commit" pkgInfo.resolution) then builtins.fetchGit {
           url = pkgInfo.resolution.repo;
           rev = pkgInfo.resolution.commit;
-        } else if allowImpure then fetchTarball {
+        } else if (lib.hasAttr pkgInfo.pname srcOverrides) then srcOverrides.${pkgInfo.pname}
+          else if allowImpure then fetchTarball {
           # Note: Resolved tarballs(github revs for example)
           # does not yet have checksums
           # https://github.com/pnpm/pnpm/issues/1035
