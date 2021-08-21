@@ -198,8 +198,8 @@ in {
       };
 
   in
-    assert lib.versionAtLeast pnpmlock.lockfileVersion "5.0"
-        && lib.versionOlder pnpmlock.lockfileVersion "5.4";
+    assert pnpmlock.lockfileVersion >= 5.0
+        && pnpmlock.lockfileVersion <= 5.3;
   (mkPnpmDerivation {
     deps = (builtins.map
       (attrName: packages."${attrName}")
