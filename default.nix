@@ -158,8 +158,8 @@ in {
       shaSum = lib.elemAt integrity 1;
       tarball = (lib.lists.last (lib.splitString "/" pkgInfo.pname)) + "-" + pkgInfo.version + ".tgz";
       registry = if builtins.hasAttr "registry" pnpmlock then pnpmlock.registry else "https://registry.npmjs.org/";
-      src = (if (lib.hasAttr "integrity" pkgInfo.resolution) then
-        (pkgs.fetchurl {
+      src = if (lib.hasAttr pkgInfo.name srcOverrides) then srcOverrides.${pkgInfo.name}
+        else (if (lib.hasAttr "integrity" pkgInfo.resolution) then (pkgs.fetchurl {
           url = if (lib.hasAttr "tarball" pkgInfo.resolution)
             then pkgInfo.resolution.tarball
             else "${registry}${pkgInfo.pname}/-/${tarball}";
@@ -167,8 +167,7 @@ in {
         }) else if (lib.hasAttr "commit" pkgInfo.resolution) then builtins.fetchGit {
           url = pkgInfo.resolution.repo;
           rev = pkgInfo.resolution.commit;
-        } else if (lib.hasAttr pkgInfo.pname srcOverrides) then srcOverrides.${pkgInfo.pname}
-          else if allowImpure then fetchTarball {
+        } else if allowImpure then fetchTarball {
           # Note: Resolved tarballs(github revs for example)
           # does not yet have checksums
           # https://github.com/pnpm/pnpm/issues/1035
