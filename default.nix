@@ -117,7 +117,7 @@ in {
         # Note: src can only be local path for link: dependencies
         pkgPath = linkPath src n;
         pkg = ((import ./default.nix modArgs).mkPnpmPackage {
-          inherit allowImpure;
+          inherit allowImpure srcOverrides;
           src = pkgPath;
           packageJSON = pkgPath + "/package.json";
           pnpmLock = pkgPath + "/pnpm-lock.yaml";
