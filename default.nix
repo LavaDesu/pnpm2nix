@@ -82,7 +82,7 @@ in {
     ...
   } @args:
   let
-    specialAttrs = [ "src" "packageJSON" "pnpmLock" "overrides" "allowImpure" ];
+    specialAttrs = [ "src" "packageJSON" "pnpmLock" "overrides" "allowImpure" "srcOverrides" ];
 
     package = lib.importJSON packageJSON;
     pname = safePkgName package.name;
